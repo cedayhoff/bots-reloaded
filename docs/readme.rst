@@ -1,28 +1,7 @@
 Bots-Edi
 ========
 
-.. image:: https://badges.gitter.im/Join Chat.svg
-   :alt: Join the chat at https://gitter.im/bots-edi/Lobby
-   :target: https://gitter.im/bots-edi/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-
-.. image:: https://readthedocs.org/projects/bots/badge/?version=latest
-    :alt: Documentation Status
-    :scale: 100%
-    :target: https://bots-edi.github.io/bots/
-
-.. image:: https://landscape.io/github/bots-edi/bots/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/bots-edi/bots/master
-   :alt: Code Health
-
-.. image:: https://img.shields.io/pypi/v/bots.svg
-   :target: https://pypi.python.org/pypi/bots
-   :alt: Latest Version
-
-.. image:: https://img.shields.io/pypi/status/bots.svg
-   :target: https://pypi.python.org/pypi/bots
-   :alt: Development Status
-
-.. image:: https://img.shields.io/pypi/pyversions/bots.svg
+.. image:: https://img.shields.io/badge/python-3.12-blue.svg
    :target: https://pypi.python.org/pypi/bots
    :alt: Python Versions
 
@@ -46,10 +25,10 @@ Bots-Edi is a free, open-source EDI translator. It has the following features:
     - Bots handles high volumes of EDI transactions.
     - Bots is very flexible and can be configurated for your specific EDI needs.
 
-This is a fork of Bots, which was created by `Henk-Jan
-Ebbers`_. This fork was
-created in an effort to build a more collaborative community around this
-project.
+This is a fork of a fork of Bots, which was created by `Henk-Jan
+Ebbers`_. This fork of a fork was
+created in an effort to get it updated and usable in 2024.  I have many plans with this.  For now, this is what I have.
+Updated documentation coming soon.
 
 Getting Started
 ---------------

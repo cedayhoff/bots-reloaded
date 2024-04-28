@@ -14,7 +14,6 @@ RUN pip install /bots
 RUN mkdir /usr/local/lib/python3.12/site-packages/bots/botssys
 RUN mkdir /usr/local/lib/python3.12/site-packages/bots/botssys/sqlitedb
 COPY ./src/bots/config/bots.ini /usr/local/lib/python3.12/site-packages/bots/config/
-# COPY ./src/bots/config/settings.py /usr/local/lib/python3.12/site-packages/bots/config/
 COPY ./src/bots/config/botsdb /usr/local/lib/python3.12/site-packages/bots/botssys/sqlitedb/
 
 COPY ./docker/bots_py312/supervisord.conf /etc/supervisor/supervisord.conf
