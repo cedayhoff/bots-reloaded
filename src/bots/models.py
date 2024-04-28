@@ -10,14 +10,13 @@ else:
 import os
 import re
 from django.db import models
-from django.utils.translation import ugettext_lazy as _  # django 1.7: have to use ugettext_lazy here
+from django.utils.translation import gettext_lazy as _  # django 1.7: have to use gettext_lazy here
 #~ from django.core.validators import validate_email
 from django.core.validators import validate_integer
 from django.core.exceptions import ValidationError
-from django.utils.encoding import python_2_unicode_compatible
 from . import botsglobal
 from . import validate_email
-''' Declare database tabels.
+''' Declare database tables.
     Django is not always perfect in generating db - but improving ;-)).
     The generated database can be manipulated SQL. see bots/sql/*.
 '''
@@ -222,7 +221,6 @@ class TextAsInteger(models.CharField):
 #***********************************************************************************
 
 
-@python_2_unicode_compatible
 class confirmrule(models.Model):
     #~ id = models.IntegerField(primary_key=True)
     active = models.BooleanField(default=False)
@@ -253,7 +251,6 @@ class confirmrule(models.Model):
                     'topartner', 'idroute', 'idchannel', 'messagetype']
 
 
-@python_2_unicode_compatible
 class ccodetrigger(models.Model):
     ccodeid = StripCharField(primary_key=True, max_length=35, verbose_name=_('Type of user code'))
     ccodeid_desc = models.TextField(blank=True, null=True, verbose_name=_('Description'))
@@ -267,7 +264,6 @@ class ccodetrigger(models.Model):
         ordering = ['ccodeid']
 
 
-@python_2_unicode_compatible
 class ccode(models.Model):
     #~ id = models.IntegerField(primary_key=True)     #added 20091221
     ccodeid = models.ForeignKey(ccodetrigger, on_delete=models.CASCADE, verbose_name=_('Type of user code'))
@@ -292,7 +288,6 @@ class ccode(models.Model):
         ordering = ['ccodeid', 'leftcode']
 
 
-@python_2_unicode_compatible
 class channel(models.Model):
     idchannel = StripCharField(max_length=35, primary_key=True)
     inorout = StripCharField(max_length=35, choices=INOROUT, verbose_name=_('in/out'))
@@ -357,7 +352,6 @@ class channel(models.Model):
         return self.idchannel + ' (' + self.type + ')'
 
 
-@python_2_unicode_compatible
 class partner(models.Model):
     idpartner = StripCharField(max_length=35, primary_key=True, verbose_name=_('partner identification'))
     active = models.BooleanField(default=False)
@@ -417,7 +411,6 @@ class partnergroep(partner):
         db_table = 'partner'
 
 
-@python_2_unicode_compatible
 class chanpar(models.Model):
     #~ id = models.IntegerField(primary_key=True)     #added 20091221
     idpartner = models.ForeignKey(partner, on_delete=models.CASCADE, verbose_name=_('partner'))
@@ -438,7 +431,6 @@ class chanpar(models.Model):
         return unicode(self.idpartner) + ' ' + unicode(self.idchannel) + ' ' + unicode(self.mail)
 
 
-@python_2_unicode_compatible
 class translate(models.Model):
     #~ id = models.IntegerField(primary_key=True)
     active = models.BooleanField(default=False)
@@ -488,7 +480,6 @@ class translate(models.Model):
         return unicode(self.fromeditype) + ' ' + unicode(self.frommessagetype) + ' ' + unicode(self.alt) + ' ' + unicode(self.frompartner) + ' ' + unicode(self.topartner)
 
 
-@python_2_unicode_compatible
 class routes(models.Model):
     #~ id = models.IntegerField(primary_key=True)
     idroute = StripCharField(max_length=35, db_index=True, help_text=_(

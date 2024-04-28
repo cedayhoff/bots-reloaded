@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import sys
 if sys.version_info[0] > 2:
     basestring = unicode = str
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 #bots-modules
 from . import botslib
 from . import botsglobal

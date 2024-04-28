@@ -12,7 +12,7 @@ import subprocess
 import traceback
 import socket
 import django
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.contrib import messages
 from . import forms
 from . import models
@@ -32,7 +32,7 @@ def server_error(request, template_name='500.html'):
     exc_info = traceback.format_exc(None)
     botsglobal.logger.info(_('Ran into server error: "%(error)s"'), {'error': exc_info})
     temp = django.template.loader.get_template(template_name)  # You need to create a 500.html template.
-    return django.http.HttpResponseServerError(temp.render(django.template.Context({'exc_info': exc_info})))
+    return django.http.HttpResponseServerError(temp.render({'exc_info': exc_info}))
 
 
 def index(request, *kw, **kwargs):
@@ -745,7 +745,7 @@ def runengine(request, *kw, **kwargs):
         #either bots-engine is run directly or via jobqueue-server:
         # run bots-engine via jobqueue-server; reports back if job is queued
         if botsglobal.ini.getboolean('jobqueue', 'enabled', False):
-            import job2queue
+            from bots import job2queue
             terug = job2queue.send_job_to_jobqueue(lijst)
             messages.add_message(request, messages.INFO, job2queue.JOBQUEUEMESSAGE2TXT[terug])
             botsglobal.logger.info(job2queue.JOBQUEUEMESSAGE2TXT[terug])
