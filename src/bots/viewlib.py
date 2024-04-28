@@ -7,7 +7,7 @@ import datetime
 import re
 import django
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from . import models
 from . import botsglobal
 from .botsconfig import *
@@ -369,11 +369,11 @@ def indent_x12(content):
         return content
     return content.replace(sep, sep + '\n')
 
-EDIFACT_INDENT = re.compile('''
-    (?<!\?)     #if no preceding escape (?)
-    '           #apostrophe
-    (?![\n\r])  #if no following CR of LF
-    ''', re.VERBOSE)
+EDIFACT_INDENT = re.compile(r'''
+    (?<!\?)    # If no preceding escape (?)
+    '          # Apostrophe
+    (?![\n\r]) # If no following CR or LF
+''', re.VERBOSE)
 
 
 def indent_edifact(content):

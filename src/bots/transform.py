@@ -12,7 +12,7 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 #bots-modules
 from . import botslib
 from . import botsglobal

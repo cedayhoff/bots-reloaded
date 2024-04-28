@@ -28,7 +28,7 @@ if os.name == 'nt':
     import msvcrt
 elif os.name == 'posix':
     import fcntl
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 #bots-modules
 from . import botslib
 from . import botsglobal

@@ -24,7 +24,7 @@ except ImportError:
     from xml.etree import ElementInclude as ETI
 
 from collections import OrderedDict
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 #bots-modules
 from . import botslib

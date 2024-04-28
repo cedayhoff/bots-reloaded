@@ -189,7 +189,7 @@ def connect():
                                         passwd=botsglobal.settings.DATABASES['default']['PASSWORD'],
                                         cursorclass=cursors.DictCursor,
                                         **botsglobal.settings.DATABASES['default']['OPTIONS'])
-    elif botsglobal.settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql_psycopg2':
+    elif botsglobal.settings.DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
         import psycopg2
         import psycopg2.extensions
         import psycopg2.extras

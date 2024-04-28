@@ -46,7 +46,7 @@ def read(*names, **kwargs):
         return fd.read()
 
 
-version = '3.3.1.dev0'
+version = '2024.04.27.1'
 
 
 long_description = (
@@ -58,28 +58,26 @@ long_description = (
     )
 
 install_requires = [
-    'Cherrypy>3.1.0',
-    'click',
-    'Django>=1.4.0',
-    'future',
-    'setuptools',
-    'six',
-    ]
+    'click==8.1.7',
+    'future==1.0.0',
+    'setuptools==69.5.1',
+    'six==1.16.0'
+]
 
 extras_require = {
     'docs': [
-        'sphinx',
-        'sphinx_rtd_theme',
-        ],
+        'sphinx==7.3.7',
+        'sphinx_rtd_theme==2.0.0'
+    ],
     'tools': [
-        'ecdsa',     # dep of paramiko
-        'Genshi',    # for using templates/mapping to HTML)
-        'paramiko',  # SFTP
-        'pdfminer',  # parse pdf-files
-        'pycrypto',  # SFTP
-        'xlrd',      # parse excel-files
-        ],
-    }
+        'ecdsa==0.19.0',       # dep of paramiko
+        'Genshi==0.7.7',       # for using templates/mapping to HTML)
+        'paramiko==3.4.0',     # SFTP
+        'pdfminer==20191125',  # parse pdf-files
+        'pycryptodome==3.20.0',     # SFTP
+        'xlrd==2.0.1'          # parse excel-files
+    ]
+}
 
 # Add OS-specific dependencies
 operating_system = platform.system()
@@ -91,11 +89,7 @@ elif operating_system == 'Windows':
 classifiers = [
     'Development Status :: 5 - Production/Stable',
     'Operating System :: OS Independent',
-    'Programming Language :: Python',
-    'Programming Language :: Python :: 2',
-    'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.4',
-    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.12',
     'License :: OSI Approved :: GNU General Public License (GPL)',
     'Topic :: Office/Business',
     'Topic :: Office/Business :: Financial',

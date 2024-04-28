@@ -10,7 +10,7 @@ import os
 import atexit
 import logging
 import warnings
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 #bots-modules
 from . import botslib
 from . import botsglobal
