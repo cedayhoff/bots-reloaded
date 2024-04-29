@@ -1,5 +1,13 @@
 Bots-Edi
 ========
+** This is a work in progress.  I do not get paid for this and am providing updated code as I can get to it.
+If you have questions or suggestions outside the scope of the "Issues" tab, you can reach me via:
+
+Email: cdayhoff@cedayhoff.com
+
+LinkedIn: https://www.linkedin.com/in/charlesdayhoff/
+
+
 
 .. image:: https://img.shields.io/badge/python-3.12-blue.svg
    :target: https://pypi.python.org/pypi/bots
@@ -34,7 +42,8 @@ Getting Started
 ---------------
 
 The documentation_ is a great place to get
-started.
+started however it is referencing the old fork that I used to make this one and many thing will be changed.
+Updated documentation is coming very soon.
 
 License
 -------
