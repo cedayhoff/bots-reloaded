@@ -13,6 +13,7 @@ import traceback
 import socket
 import django
 from django.utils.translation import gettext as _
+from django.shortcuts import render
 from django.contrib import messages
 from . import forms
 from . import models
@@ -446,7 +447,7 @@ def srcfiler(request, *kw, **kwargs):
     if request.method == 'GET':
         try:
             src = request.GET['src']
-            if botsglobal.ini.get('directories', 'usersys') in src and src.endswith('.py'):  # only python source in usersys!
+            if botsglobal.ini.get('directories', 'usersys') in src and src.endswith('.py'):
 
                 with open(src) as f:
                     source = f.read()
@@ -459,30 +460,66 @@ def srcfiler(request, *kw, **kwargs):
             return django.shortcuts.render(request, 'bots/srcfiler.html', {'error_content': _('No such file.')})
 
 
-def logfiler(request, *kw, **kwargs):
-    ''' handles bots log file viewer. display/download any file in logging directory.
+def logfiler(request):
+    ''' Handles bots log file viewer. Display or download any file in logging directory.
     '''
-    if request.method == 'GET':
-        if 'log' in request.GET:
-            log = request.GET['log']
-        else:
-            log = 'engine.log'
-        logpath = botslib.join(botsglobal.ini.get('directories', 'botssys'), 'logging')
-        logf = botslib.join(logpath, log)
-        try:
-            with open(logf) as f:
-                logdata = f.read()
-        except:
-            logdata = _(u'No such file %s' % logf)
+    # Default log and error files
+    default_log_file = 'engine.log'
+    default_err_file = 'engine.err'
 
-        if 'action' in request.GET and request.GET['action'] == 'download':
-            response = django.http.HttpResponse(content_type='text/log')
-            response['Content-Disposition'] = 'attachment; filename=' + log
-            response.write(logdata)
-            return response
-        else:
-            logfiles = sorted(os.listdir(logpath), key=lambda s: s.lower())
-            return django.shortcuts.render(request, 'bots/logfiler.html', {'log': log, 'logdata': logdata, 'logfiles': logfiles})
+    # Base directory for logs and errors
+    logpath = botslib.join(botsglobal.ini.get('directories', 'botssys'), 'logging')
+
+    # Determine the requested file and action
+    filename = request.GET.get('log', default_log_file)
+    err_filename = request.GET.get('error', default_err_file)
+    action = request.GET.get('action', '')
+
+    # Build full paths
+    logf = botslib.join(logpath, filename)
+    errf = botslib.join(logpath, err_filename)
+
+    # Handle file display or download
+    if action == 'download':
+        try:
+            if 'log' in request.GET:
+                with open(logf, 'r', encoding='utf-8') as f:
+                    filedata = f.read()
+                download_filename = filename
+            elif 'error' in request.GET:
+                with open(errf, 'r', encoding='utf-8') as f:
+                    filedata = f.read()
+                download_filename = err_filename
+        except IOError:
+            filedata = _('No such file: %s' % (logf if 'log' in request.GET else errf))
+            download_filename = filename
+
+        response = django.http.HttpResponse(filedata, content_type='text/plain')
+        response['Content-Disposition'] = f'attachment; filename="{download_filename}"'
+        return response
+
+    # Read and prepare data for display
+    try:
+        with open(logf, 'r', encoding='utf-8') as f:
+            logdata = f.read()
+    except IOError:
+        logdata = _('No such file: %s' % logf)
+    logfiles = [file for file in os.listdir(logpath) if file.endswith('.log')]     
+    try:
+        with open(errf, 'r', encoding='utf-8') as f:
+            errdata = f.read()
+    except IOError:
+        errdata = _('No such file: %s' % errf)
+    errorfiles = [file for file in os.listdir(logpath) if file.endswith('.err')]
+    
+    return render(request, 'bots/logfiler.html', {
+        'log': filename,
+        'logdata': logdata,
+        'logfiles': sorted(logfiles, key=lambda s: s.lower()),
+        'errorlog': err_filename,
+        'errdata': errdata,
+        'errorfiles': sorted(errorfiles, key=lambda s: s.lower())
+    })
 
 
 def plugin(request, *kw, **kwargs):
