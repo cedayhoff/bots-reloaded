@@ -44,6 +44,7 @@ urlpatterns = [
     path('filer/', login_required(views.filer), name='filer'),
     path('srcfiler/', login_required(views.srcfiler), name='srcfiler'),
     path('logfiler/', login_required(views.logfiler), name='logfiler'),
+    path('jobqueue/', login_required(views.job_queue), name='job_queue'),
 
     # Admin views
     path('admin/', admin.site.urls),

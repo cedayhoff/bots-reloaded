@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load static %}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="/home/" style="color:{{ bots_environment_text_color }}">
     <img src="{% static 'images/favicon.ico' %}" width="30" height="30" alt="" loading="lazy">
@@ -24,6 +25,14 @@
               </button>
           </form>
           <a class="dropdown-item" href="/password_change/">Change password</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="/jobqueue/" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Job Queue
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/jobqueue/">Recent Job Queue Runs</a>
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -61,7 +70,7 @@
           <a class="dropdown-item" href="/incoming/?select">Incoming</a>
           <a class="dropdown-item" href="/document/?select">Document</a>
           <a class="dropdown-item" href="/outgoing/?select">Outgoing</a>
-          <a class="dropdown-item" href="/processes/?select">Process Errors</a>
+          <a class="dropdown-item" href="/process/?select">Process Errors</a>
           <a class="dropdown-item" href="/confirm/?select">Confirmations</a>	  
         </div>
       </li>
@@ -125,13 +134,24 @@
               <a class="dropdown-item" href="/runengine/?clparameter=--cleanup">Run cleanup</a>
 	  {% endif %}
 	  {% if menu_all_routes %}
-	      <hr/>
 	      {% for route in menu_all_routes %}
-	         <a class="dropdown-item" href="/runengine/?clparameter={{ route|urlencode:'' }}">{{ route }}</a>
+	         <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Run Specific Route
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          {% for route in menu_all_routes %}
+              <a class="dropdown-item" href="/runengine/?route_id={{ route }}">{{ route }}</a>
+          {% empty %}
+              <a class="dropdown-item" href="#">No routes available</a>
+          {% endfor %}
+      </div>
+      </li>
 	      {% endfor %}	 
 	  {% endif %}
         </div>
       </li>
+      
       {% endif %}
       {% if custom_menus %}
       <li class="nav-item dropdown">

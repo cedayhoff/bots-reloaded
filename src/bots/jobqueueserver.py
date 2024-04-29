@@ -62,7 +62,7 @@ class Jobqueue:
             cur.execute("SELECT job_id, task_details FROM job_queue WHERE status = 'pending' ORDER BY priority DESC LIMIT 1")
             job = cur.fetchone()
             if job:
-                self.updatejobstatus(job[0], 'in progress')
+                self.updatejobstatus(job[0], 'running')
                 return job
             return None
 

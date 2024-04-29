@@ -11,6 +11,7 @@ from django.utils.translation import gettext as _
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
+from .models import JobQueue
 #bots-modules
 from . import models
 from . import botsglobal
@@ -252,6 +253,12 @@ class RoutesAdmin(BotsAdmin):
                          'classes': ('collapse wide extrapretty',)
                          }),
     )
+@admin.register(JobQueue)
+class JobQueueAdmin(admin.ModelAdmin):
+    list_display = ['job_id', 'priority', 'status', 'creation_time', 'last_updated_time']
+    list_filter = ['status', 'creation_time']
+    search_fields = ['task_details']
+
 admin.site.register(models.routes, RoutesAdmin)
 
 

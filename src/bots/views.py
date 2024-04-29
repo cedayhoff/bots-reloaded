@@ -47,6 +47,31 @@ def index(request, *kw, **kwargs):
 def home(request, *kw, **kwargs):
     return django.shortcuts.render(request, 'bots/about.html', {'botsinfo': botslib.botsinfo()})
 
+def job_queue(request):
+    order_by = request.GET.get('order', 'job_id') 
+    reverse = request.GET.get('reverse', '1') 
+
+    if reverse == '1':
+        order_by = '-' + order_by 
+        new_reverse = '0'  
+    else:
+        new_reverse = '1'
+
+    jobs = models.JobQueue.objects.order_by(order_by)
+    context = {
+        'jobs': jobs,
+        'headers': [
+            ('Job ID', 'job_id'),
+            ('Priority', 'priority'),
+            ('Task Details', 'task_details'),
+            ('Status', 'status'),
+            ('Creation Time', 'creation_time'),
+            ('Last Updated', 'last_updated_time')
+        ],
+        'order_by': order_by.strip('-'),
+        'reverse': new_reverse
+    }
+    return render(request, 'bots/queue.html', context)
 
 def reports(request, *kw, **kwargs):
     if request.method == 'GET':
@@ -778,6 +803,10 @@ def runengine(request, *kw, **kwargs):
         # get 4. commandstorun (eg --new) and routes via request
         if 'clparameter' in request.GET:
             lijst.append(request.GET['clparameter'])
+
+        route_id = request.GET.get('route_id')  # Retrieve route_id from GET parameters
+        if route_id:
+            lijst = 'python /bots/scripts/bots-job2queue.py -p1 python /bots/scripts/bots-engine.py ' + route_id
 
         #either bots-engine is run directly or via jobqueue-server:
         # run bots-engine via jobqueue-server; reports back if job is queued

@@ -16,6 +16,8 @@ from django.core.validators import validate_integer
 from django.core.exceptions import ValidationError
 from . import botsglobal
 from . import validate_email
+from django.utils.html import format_html
+
 ''' Declare database tables.
     Django is not always perfect in generating db - but improving ;-)).
     The generated database can be manipulated SQL. see bots/sql/*.
@@ -195,7 +197,7 @@ def script_link1(script, linktext):
     if os.path.exists(script):
         return '<a href="/srcfiler/?src=%s" target="_blank">%s</a>' % (urllib_quote(script.encode("utf-8")), linktext)
     else:
-        return '<img src="/media/admin/img/icon-no.gif"></img> %s' % linktext
+        return '<img src="/media/admin/img/icon-no.png"></img> %s' % linktext
 
 
 def script_link2(script):
@@ -203,9 +205,10 @@ def script_link2(script):
         used in routes, channels (scripts are optional)
     '''
     if os.path.exists(script):
-        return '<a class="nowrap" href="/srcfiler/?src=%s" target="_blank"><img src="/media/admin/img/icon-yes.gif"></img> view</a>' % urllib_quote(script.encode("utf-8"))
+        link = '<a class="nowrap" href="/srcfiler/?src=%s" target="_blank"><img src="/media/admin/img/icon-yes.gif"></img> view</a>' % urllib_quote(script.encode("utf-8"))
     else:
-        return '<img src="/media/admin/img/icon-no.gif"></img>'
+        link = '<img src="/media/admin/img/icon-bypass.png"></img>'
+    return format_html(link)
 
 
 class MultipleEmailField(models.CharField):
@@ -546,15 +549,43 @@ class routes(models.Model):
 
     def translt(self):
         if self.translateind == 0:
-            return '<img alt="%s" src="/media/admin/img/icon-no.gif"></img>' % (self.get_translateind_display())
+            return format_html('<img alt="{}" src="/media/admin/img/icon-no.png"></img>', self.get_translateind_display())
         elif self.translateind == 1:
-            return '<img alt="%s" src="/media/admin/img/icon-yes.gif"></img>' % (self.get_translateind_display())
+            return format_html('<img alt="{}" src="/media/admin/img/icon-yes.gif"></img>', self.get_translateind_display())
         elif self.translateind == 2:
-            return '<img alt="%s" src="/media/images/icon-pass.gif"></img>' % (self.get_translateind_display())
+            return format_html('<img alt="{}" src="/media/images/icon-pass.gif"></img>', self.get_translateind_display())
         elif self.translateind == 3:
-            return '<img alt="%s" src="/media/images/icon-pass_parse.gif"></img>' % (self.get_translateind_display())
+            return format_html('<img alt="{}" src="/media/images/icon-pass_parse.gif"></img>', self.get_translateind_display())
+    translt.admin_order_field = 'translateind'
     translt.allow_tags = True
     translt.admin_order_field = 'translateind'
+
+class JobQueue(models.Model):
+    PENDING = 'pending'
+    RUNNING = 'running'
+    COMPLETED = 'completed'
+    FAILED = 'failed'
+    STATUS_CHOICES = [
+        (PENDING, 'Pending'),
+        (RUNNING, 'Running'),
+        (COMPLETED, 'Completed'),
+        (FAILED, 'Failed'),
+    ]
+    job_id = models.AutoField(primary_key=True)
+    priority = models.IntegerField()
+    task_details = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
+    creation_time = models.DateTimeField(auto_now_add=True)
+    last_updated_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'job_queue'
+        verbose_name = 'Job Queue'
+        verbose_name_plural = 'Job Queues'
+        ordering = ['priority', 'creation_time']
+
+    def __str__(self):
+        return f"Job {self.job_id}: {self.status}"
 
 #***********************************************************************************
 #******** written by engine ********************************************************
