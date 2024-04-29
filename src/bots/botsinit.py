@@ -214,49 +214,68 @@ convertini2logger = {'DEBUG': logging.DEBUG, 'INFO': logging.INFO, 'WARNING': lo
 
 
 def initenginelogging(logname):
-    #initialise file logging: create main logger 'bots'
+    # Initialise file logging: create main logger
     logger = logging.getLogger(logname)
-    logger.setLevel(convertini2logger[botsglobal.ini.get('settings', 'log_file_level', 'INFO')])
+    logger.setLevel(logging.DEBUG)  # Set to DEBUG to capture all log levels
+
+    # Base log file handler
+    log_path = os.path.join(botsglobal.ini.get('directories', 'logging'), logname)
     if botsglobal.ini.get('settings', 'log_file_number', None) == 'daily':
-        handler = logging.handlers.TimedRotatingFileHandler(os.path.join(botsglobal.ini.get(
-            'directories', 'logging'), logname + '.log'), when='midnight', backupCount=10)
+        handler = logging.handlers.TimedRotatingFileHandler(
+            f"{log_path}.log", when='midnight', backupCount=10)
     else:
-        handler = logging.handlers.RotatingFileHandler(botslib.join(botsglobal.ini.get(
-            'directories', 'logging'), logname + '.log'), backupCount=botsglobal.ini.getint('settings', 'log_file_number', 10))
-        handler.doRollover()  # each run a new log file is used; old one is rotated
-    fileformat = logging.Formatter('%(asctime)s %(levelname)-8s %(name)s : %(message)s', '%Y%m%d %H:%M:%S')
-    handler.setFormatter(fileformat)
+        max_backups = botsglobal.ini.getint('settings', 'log_file_number', 10)
+        handler = logging.handlers.RotatingFileHandler(
+            f"{log_path}.log", backupCount=max_backups)
+        handler.doRollover()  # Each run a new log file is used; old one is rotated
+
+    file_format = logging.Formatter('%(asctime)s %(levelname)-8s %(name)s : %(message)s', '%Y%m%d %H:%M:%S')
+    handler.setFormatter(file_format)
     logger.addHandler(handler)
-    #initialise file logging: logger for trace of mapping; tried to use filters but got this not to work.....
-    botsglobal.logmap = logging.getLogger('engine.map')
-    if not botsglobal.ini.getboolean('settings', 'mappingdebug', False):
-        botsglobal.logmap.setLevel(logging.CRITICAL)
-    #logger for reading edifile. is now used only very limited (1 place); is done with 'if'
-    #~ botsglobal.ini.getboolean('settings','readrecorddebug',False)
-    # initialise console/screen logging
+
+    # Consolidated error-specific log file
+    error_handler = logging.FileHandler(f"{log_path}.err")
+    error_handler.setLevel(logging.WARNING)  # Set to WARNING to capture WARNING, ERROR, and CRITICAL
+    error_handler.setFormatter(file_format)
+    logger.addHandler(error_handler)
+
+    # Console logging
     if botsglobal.ini.getboolean('settings', 'log_console', True):
         console = logging.StreamHandler()
         console.setLevel(logging.INFO)
-        consuleformat = logging.Formatter('%(levelname)-8s %(message)s')
-        console.setFormatter(consuleformat)  # add formatter to console
-        logger.addHandler(console)  # add console to logger
+        console_format = logging.Formatter('%(levelname)-8s %(message)s')
+        console.setFormatter(console_format)
+        logger.addHandler(console)
+
     return logger
 
-
 def initserverlogging(logname):
-    # initialise file logging
+    # Initialise file logging
     logger = logging.getLogger(logname)
-    logger.setLevel(convertini2logger[botsglobal.ini.get(logname, 'log_file_level', 'INFO')])
-    handler = logging.handlers.TimedRotatingFileHandler(os.path.join(botsglobal.ini.get(
-        'directories', 'logging'), logname + '.log'), when='midnight', backupCount=10)
-    fileformat = logging.Formatter('%(asctime)s %(levelname)-9s: %(message)s', '%Y%m%d %H:%M:%S')
-    handler.setFormatter(fileformat)
+    logger.setLevel(logging.DEBUG)  # Set to DEBUG to capture all log levels
+
+    # Base log file handler for regular logging
+    log_path = os.path.join(botsglobal.ini.get('directories', 'logging'), logname)
+    handler = logging.handlers.TimedRotatingFileHandler(
+        f"{log_path}.log", when='midnight', backupCount=10)
+    
+    file_format = logging.Formatter('%(asctime)s %(levelname)-9s: %(message)s', '%Y%m%d %H:%M:%S')
+    handler.setFormatter(file_format)
     logger.addHandler(handler)
-    # initialise console/screen logging
+
+    # Error-specific log file to capture WARNING, ERROR, and CRITICAL in one file
+    error_handler = logging.FileHandler(f"{log_path}.err")
+    error_handler.setLevel(logging.WARNING)  # Set to WARNING to capture WARNING, ERROR, and CRITICAL
+    error_handler.setFormatter(file_format)
+    logger.addHandler(error_handler)
+
+    # Console logging
     if botsglobal.ini.getboolean(logname, 'log_console', True):
         console = logging.StreamHandler()
-        console.setLevel(convertini2logger[botsglobal.ini.get(logname, 'log_console_level', 'STARTINFO')])
-        consoleformat = logging.Formatter('%(asctime)s %(levelname)-9s: %(message)s', '%Y%m%d %H:%M:%S')
-        console.setFormatter(consoleformat)  # add formatter to console
-        logger.addHandler(console)  # add console to logger
+        console_level = convertini2logger[botsglobal.ini.get(logname, 'log_console_level', 'INFO')]
+        console.setLevel(console_level)
+        console_format = logging.Formatter('%(asctime)s %(levelname)-9s: %(message)s', '%Y%m%d %H:%M:%S')
+        console.setFormatter(console_format)
+        logger.addHandler(console)
+
     return logger

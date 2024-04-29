@@ -265,6 +265,7 @@ def start(configdir, new, resend, rereceive, automaticretrycommunication, do_cle
         sys.exit(1)
     else:
         if errorinrun:
+            botsglobal.logger.exception(_('Error in run:\n%(msg)s'), {'msg': unicode(msg)})
             sys.exit(2)  # indicate: error(s) in run(s)
         else:
             sys.exit(0)  # OK

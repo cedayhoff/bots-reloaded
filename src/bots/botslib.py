@@ -739,7 +739,7 @@ def remove_database_lock():
 
 def check_if_other_engine_is_running():
     ''' bots-engine always connects to 127.0.0.1 port 28081 (or port as set in bots.ini).
-        this  is a good way of detecting that another bots-engien is still running.
+        this  is a good way of detecting that another bots-engine is still running.
         problem is avoided anyway if using jobqueueserver.
     '''
     try:
@@ -772,16 +772,16 @@ def trace_origin(ta, where=None):
             for key, value in where.items():
                 if getattr(taparent, key) != value:
                     break
-            else:  # all where-criteria are true;
+            else:
                 teruglijst.append(taparent)
             trace_recurse(taparent)
 
     def get_parent(ta):
         ''' yields the parents of a ta '''
-        if ta.parent:  # parent via the normal parent-attribute
+        if ta.parent:
             if ta.parent not in donelijst:
                 yield ta.parent
-        else:  # no parent via parent-link, so look via child-link
+        else:
             for row in query('''SELECT idta
                                  FROM ta
                                  WHERE idta>%(minidta)s

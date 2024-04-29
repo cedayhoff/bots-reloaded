@@ -373,7 +373,15 @@ CREATE TABLE IF NOT EXISTS uniek (
     nummer INTEGER NOT NULL DEFAULT 1,
     PRIMARY KEY (domein)
 );
-
+CREATE SEQUENCE job_queue_job_number_seq;
+CREATE TABLE IF NOT EXISTS job_queue (
+    job_id SERIAL PRIMARY KEY NOT NULL,
+    priority INTEGER NOT NULL,
+    task_details TEXT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    creation_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 INSERT INTO "auth_permission" VALUES (1,'Can add permission',1,'add_permission');
 INSERT INTO "auth_permission" VALUES (2,'Can change permission',1,'change_permission');
@@ -493,6 +501,7 @@ CREATE INDEX filereport_6c4d89a3 ON filereport (ts);
 CREATE INDEX report_6c4d89a3 ON report (ts);
 CREATE INDEX ta_410d0aac ON ta (parent);
 CREATE INDEX ta_171cbadd ON ta (reference);
+CREATE INDEX idx_job_queue_priority_status ON job_queue (priority, status);
 CREATE OR REPLACE FUNCTION update_persist_ts()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -505,5 +514,18 @@ CREATE TRIGGER persist_update
 AFTER UPDATE OF content ON persist
 FOR EACH ROW
 EXECUTE FUNCTION update_persist_ts();
+
+CREATE OR REPLACE FUNCTION update_job_queue_last_updated_time()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.last_updated_time := CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_update_job_queue_last_updated_time
+BEFORE UPDATE ON job_queue
+FOR EACH ROW
+EXECUTE FUNCTION update_job_queue_last_updated_time();
 
 COMMIT;
