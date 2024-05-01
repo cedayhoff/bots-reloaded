@@ -2,9 +2,9 @@
 {% load static %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/home/" style="color:{{ bots_environment_text_color }}">
+  <a class="navbar-brand" href="/home/" style="color: {{ bots_environment_text_color }};">{{ bots_environment_text }}</a>
+
     <img src="{% static 'images/favicon.ico' %}" width="30" height="30" alt="" loading="lazy">
-    {{ bots_environment_text }}
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -85,7 +85,7 @@
 																		   
 	  <a class="dropdown-item" href="/admin/bots/translate/">Translations</a>
           <a class="dropdown-item" href="/admin/bots/partner/">Partners</a>
-          <a class="dropdown-item" href="/admin/bots/partnergroep/">Partnergroups</a>
+          <a class="dropdown-item" href="/admin/bots/partnergroup/">Partnergroups</a>
           <a class="dropdown-item" href="/admin/bots/confirmrule/">Confirmrules</a>
 	  <hr/>
           <a class="dropdown-item" href="/admin/bots/ccode/">User Codes list</a>
