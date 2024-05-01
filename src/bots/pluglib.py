@@ -214,7 +214,7 @@ def read_index2database(orgpluglist):
         botsglobal.logger.info('    Start write to database for: "%(plug)s".', {'plug': plug})
         #correction for reading partnergroups
         if plug['plugintype'] == 'partner' and plug['isgroup']:
-            plug['plugintype'] = 'partnergroep'
+            plug['plugintype'] = 'partnergroup'
         #remember the plugintype
         plugintype = plug['plugintype']
 

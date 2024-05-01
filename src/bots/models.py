@@ -195,9 +195,12 @@ def script_link1(script, linktext):
         used in translate (all scripts should exist, missing script is an error).
     '''
     if os.path.exists(script):
-        return '<a href="/srcfiler/?src=%s" target="_blank">%s</a>' % (urllib_quote(script.encode("utf-8")), linktext)
+        link = '<a href="/srcfiler/?src={}" target="_blank">{}</a>'.format(urllib_quote(script.encode("utf-8")), linktext)
+        return format_html(link)
     else:
-        return '<img src="/media/admin/img/icon-no.png"></img> %s' % linktext
+        link = '<img src="/media/admin/img/icon-no.gif"></img> {}'.format(urllib_quote(script.encode("utf-8")), linktext)
+        return format_html(link)
+
 
 
 def script_link2(script):
@@ -399,14 +402,14 @@ class partner(models.Model):
         return unicode(self.idpartner) + ' (' + unicode(self.name) + ')'
 
     def save(self, *args, **kwargs):
-        if isinstance(self, partnergroep):
+        if isinstance(self, partnergroup):
             self.isgroup = True
         else:
             self.isgroup = False
         super(partner, self).save(*args, **kwargs)
 
 
-class partnergroep(partner):
+class partnergroup(partner):
 
     class Meta:
         proxy = True
@@ -549,7 +552,7 @@ class routes(models.Model):
 
     def translt(self):
         if self.translateind == 0:
-            return format_html('<img alt="{}" src="/media/admin/img/icon-no.png"></img>', self.get_translateind_display())
+            return format_html('<img alt="{}" src="/media/admin/img/icon-no.gif"></img>', self.get_translateind_display())
         elif self.translateind == 1:
             return format_html('<img alt="{}" src="/media/admin/img/icon-yes.gif"></img>', self.get_translateind_display())
         elif self.translateind == 2:

@@ -197,7 +197,7 @@ admin.site.register(models.partner, PartnerAdmin)
 #~ fk_name = 'from_partner_id'
 
 
-class PartnerGroepAdmin(BotsAdmin):
+class PartnerGroupAdmin(BotsAdmin):
     actions = ('activate',)
     #~ inlines = [PartnerInline,]
     #~ exclude = ('group',)
@@ -214,7 +214,7 @@ class PartnerGroepAdmin(BotsAdmin):
 
     def queryset(self, request):
         return self.model.objects.filter(isgroup=True)
-admin.site.register(models.partnergroep, PartnerGroepAdmin)
+admin.site.register(models.partnergroup, PartnerGroupAdmin)
 
 
 class MyRouteAdminForm(forms.ModelForm):
